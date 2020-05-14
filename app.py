@@ -31,6 +31,24 @@ def create_app(test_config=None):
 
   @app.route('/')
   def index():
+    AUTH0_DOMAIN = os.getenv('AUTH0_DOMAIN')
+    API_AUDIENCE = os.getenv('API_AUDIENCE')
+    CLIENT_ID = os.getenv('CLIENT_ID')
+    AUTH0_CALLBACK_URL = "https://fullstack-capstone-dporr.herokuapp.com/"
+    url = f'https://{AUTH0_DOMAIN}/authorize' \
+        f'?audience={API_AUDIENCE}' \
+        f'&response_type=token&client_id=' \
+        f'{CLIENT_ID}&redirect_uri=' \
+        f'{AUTH0_CALLBACK_URL}'
+    return jsonify({
+        "message":"Please login in the following URL in order to get JWT Tokens for each user and role"
+        'url': url,
+        "users":[
+          {"email":"player.fsnd@dporras.io.gt", "password":"dporras-fullstack-nd01","role":"quizz player"},
+          {"email":"qa.fsnd@dporras.io.gt", "password":"dporras-fullstack-nd02","role":"QA for reviewing questions"},
+          {"email":"admin.fsnd@dporras.io.gt", "password":"dporras-fullstack-nd03","role":"Trivia manager"}
+        ]
+        })
     return jsonify({"message": "Welcome to trivia API capstone version"})
   '''
   @TODO: 
