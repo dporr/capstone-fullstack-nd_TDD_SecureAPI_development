@@ -54,7 +54,11 @@ def get_token_auth_header():
         )
     elif len(parts) == 1:
         raise AuthError(
-            {"code": "invalid_header", "description": "token not found"}, 401
+            {
+                "code": "invalid_header",
+                "description": "token not found",
+            },
+            401,
         )
     elif len(parts) > 2:
         raise AuthError(
@@ -117,7 +121,11 @@ def verify_decode_jwt(token):
         unverified_header = jwt.get_unverified_header(token)
     except:
         raise AuthError(
-            {"code": "invalid_header", "description": "Malformed Token"}, 401
+            {
+                "code": "invalid_header",
+                "description": "Malformed Token",
+            },
+            401,
         )
     rsa_key = {}
     if "kid" not in unverified_header:
@@ -149,7 +157,11 @@ def verify_decode_jwt(token):
             return payload
         except jwt.ExpiredSignatureError:
             raise AuthError(
-                {"code": "token_expired", "description": "Token expired."}, 401
+                {
+                    "code": "token_expired",
+                    "description": "Token expired.",
+                },
+                401,
             )
         except jwt.JWTClaimsError:
             raise AuthError(
