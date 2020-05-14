@@ -39,7 +39,7 @@ def create_app(test_config=None):
   '''
   @app.route("/categories")
   @requires_auth('get:categories')
-  def get_categories():
+  def get_categories(jwt):
     categories = Category.query.all()
     categories = {category.id:category.type for category in categories}
     return jsonify({
@@ -64,7 +64,7 @@ def create_app(test_config=None):
 
   @app.route('/questions')
   @requires_auth('get:questions')
-  def get_questions():
+  def get_questions(jwt):
     page = request.args.get('page', 1, int)
     questions = Question.query.all()
     total_questions  = len(questions)
@@ -91,7 +91,7 @@ def create_app(test_config=None):
   '''
   @app.route("/questions/<int:question_id>", methods = ['DELETE'])
   @requires_auth("delete:questions")
-  def delete_question(question_id):
+  def delete_question(jwt,question_id):
     question = Question.query.filter_by(id=question_id).first()
     if not question: abort(404)
     question.delete()
@@ -112,7 +112,7 @@ def create_app(test_config=None):
   '''
   @app.route('/questions', methods=['POST'])
   @requires_auth('create:questions')
-  def create_question():
+  def create_question(jwt):
     payload = request.get_json()
     question = payload.get('question', '')
     answer = payload.get('answer','')
@@ -139,7 +139,7 @@ def create_app(test_config=None):
   '''
   @app.route('/questions/search', methods=['POST'])
   @requires_auth("get:questions")
-  def search_question():
+  def search_question(jwt):
     payload = request.get_json()
     search_term = payload.get('searchTerm', '')
     if not search_term: abort(422)
@@ -163,7 +163,7 @@ def create_app(test_config=None):
   '''
   @app.route('/categories/<int:category_id>/questions')
   @requires_auth("get:questions")
-  def get_questions_by_category(category_id, paginate=True):
+  def get_questions_by_category(jwt, category_id, paginate=True):
     page = request.args.get('page', 1, int)
     category = Category.query.filter_by(id=category_id).first()
     if not category: abort(404)
@@ -195,7 +195,7 @@ def create_app(test_config=None):
   '''
   @app.route('/quizzes', methods=['POST'])
   @requires_auth('get:quizzes')
-  def quizzes():
+  def quizzes(jwt):
     payload = request.get_json()
     previous_questions = payload.get("previous_questions", []) 
     category = payload.get("quiz_category",'').get('id','')
