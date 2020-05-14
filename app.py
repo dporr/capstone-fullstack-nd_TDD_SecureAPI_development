@@ -28,6 +28,10 @@ def create_app(test_config=None):
        'GET, POST, PUT, DELETE, OPTIONS') 
     return response
 
+
+  @app.route('/')
+  def index():
+    return jsonify({"message": "Welcome to trivia API capstone version"})
   '''
   @TODO: 
   Create an endpoint to handle GET requests 
