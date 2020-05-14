@@ -153,7 +153,7 @@ def create_app(test_config=None):
   '''
   @app.route('/questions/<int:question_id>', methods=['PATCH'])
   @requires_auth('update:questions')
-  def create_question(jwt, question_id):
+  def update_question(jwt, question_id):
     payload = request.get_json()
     question = payload.get('question', '')
     answer = payload.get('answer','')
