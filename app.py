@@ -3,7 +3,7 @@ from flask import Flask, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import random
-
+from auth import AuthError, requires_auth
 from models import setup_db, Question, Category
 
 QUESTIONS_PER_PAGE = 10
@@ -34,6 +34,7 @@ def create_app(test_config=None):
   for all available categories.
   '''
   @app.route("/categories")
+  @requires_auth('get:categories')
   def get_categories():
     categories = Category.query.all()
     categories = {category.id:category.type for category in categories}
@@ -58,6 +59,7 @@ def create_app(test_config=None):
     return current_question
 
   @app.route('/questions')
+  @requires_auth('get:questions')
   def get_questions():
     page = request.args.get('page', 1, int)
     questions = Question.query.all()
@@ -84,6 +86,7 @@ def create_app(test_config=None):
   Create an endpoint to DELETE question using a question ID. 
   '''
   @app.route("/questions/<int:question_id>", methods = ['DELETE'])
+  @requires_auth("delete:questions")
   def delete_question(question_id):
     question = Question.query.filter_by(id=question_id).first()
     if not question: abort(404)
@@ -104,6 +107,7 @@ def create_app(test_config=None):
   category, and difficulty score.
   '''
   @app.route('/questions', methods=['POST'])
+  @requires_auth('create:questions')
   def create_question():
     payload = request.get_json()
     question = payload.get('question', '')
@@ -130,6 +134,7 @@ def create_app(test_config=None):
   is a substring of the question. 
   '''
   @app.route('/questions/search', methods=['POST'])
+  @requires_auth("get:questions")
   def search_question():
     payload = request.get_json()
     search_term = payload.get('searchTerm', '')
@@ -153,6 +158,7 @@ def create_app(test_config=None):
   Create a GET endpoint to get questions based on category. 
   '''
   @app.route('/categories/<int:category_id>/questions')
+  @requires_auth("get:questions")
   def get_questions_by_category(category_id, paginate=True):
     page = request.args.get('page', 1, int)
     category = Category.query.filter_by(id=category_id).first()
@@ -184,6 +190,7 @@ def create_app(test_config=None):
   if provided, and that is not one of the previous questions. 
   '''
   @app.route('/quizzes', methods=['POST'])
+  @requires_auth('get:quizzes')
   def quizzes():
     payload = request.get_json()
     previous_questions = payload.get("previous_questions", []) 
@@ -251,4 +258,4 @@ def create_app(test_config=None):
     }), 500
   return app
 
-    
+app = create_app()
