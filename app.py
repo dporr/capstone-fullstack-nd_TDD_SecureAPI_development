@@ -1,6 +1,5 @@
 import os
 from flask import Flask, request, abort, jsonify
-from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import random
 from auth import AuthError, requires_auth
@@ -15,7 +14,8 @@ def create_app(test_config=None):
     setup_db(app)
 
     """
-  Set up CORS. Allow '*' for origins. Delete the sample route after completing the TODOs
+  Set up CORS. Allow '*' for origins.
+  Delete the sample route after completing the TODOs
   """
     CORS(app)
     """
@@ -47,7 +47,8 @@ def create_app(test_config=None):
         )
         return jsonify(
             {
-                "message": "Please login in the following URL in order to get JWT Tokens for each user and role",
+                "message": "Please login in the following URL in order\
+                            to get JWT Tokens for each user and role",
                 "url": url,
                 "users": [
                     {
@@ -71,8 +72,8 @@ def create_app(test_config=None):
         return jsonify({"message": "Welcome to trivia API capstone version"})
 
     """
-  @TODO: 
-  Create an endpoint to handle GET requests 
+  @TODO:
+  Create an endpoint to handle GET requests
   for all available categories.
   """
 
@@ -90,11 +91,11 @@ def create_app(test_config=None):
         )
 
     """
-  @TODO: 
-  Create an endpoint to handle GET requests for questions, 
-  including pagination (every 10 questions). 
-  This endpoint should return a list of questions, 
-  number of total questions, current category, categories. 
+  @TODO:
+  Create an endpoint to handle GET requests for questions,
+  including pagination (every 10 questions).
+  This endpoint should return a list of questions,
+  number of total questions, current category, categories.
   """
 
     def paginate_response(page, questions):
@@ -129,12 +130,12 @@ def create_app(test_config=None):
     """TEST: At this point, when you start the application
   you should see questions and categories generated,
   ten questions per page and pagination at the bottom of the screen for three pages.
-  Clicking on the page numbers should update the questions. 
+  Clicking on the page numbers should update the questions.
   """
 
     """
-  @TODO: 
-  Create an endpoint to DELETE question using a question ID. 
+  @TODO:
+  Create an endpoint to DELETE question using a question ID.
   """
 
     @app.route("/questions/<int:question_id>", methods=["DELETE"])
@@ -148,13 +149,13 @@ def create_app(test_config=None):
 
     """
   TEST: When you click the trash icon next to a question, the question will be removed.
-  This removal will persist in the database and when you refresh the page. 
+  This removal will persist in the database and when you refresh the page.
   """
 
     """
-  @TODO: 
-  Create an endpoint to POST a new question, 
-  which will require the question and answer text, 
+  @TODO:
+  Create an endpoint to POST a new question,
+  which will require the question and answer text,
   category, and difficulty score.
   """
 
@@ -179,9 +180,9 @@ def create_app(test_config=None):
         return jsonify({"success": True, "question_id": question_id})
 
     """
-  @TODO: 
-  Create an endpoint to PATCH an existing question, 
-  which will require the question ID and allows to edit 
+  @TODO:
+  Create an endpoint to PATCH an existing question,
+  which will require the question ID and allows to edit
   category, question, answer and difficulty score.
   """
 
@@ -213,14 +214,14 @@ def create_app(test_config=None):
         return jsonify({"success": True, "question_id": question_id})
 
     """
-  TEST: When you submit a question on the "Add" tab, 
+  TEST: When you submit a question on the "Add" tab,
   the form will clear and the question will appear at the end of the last page
-  of the questions list in the "List" tab.  
+  of the questions list in the "List" tab.s
 
-  @TODO: 
-  Create a POST endpoint to get questions based on a search term. 
-  It should return any questions for whom the search term 
-  is a substring of the question. 
+  @TODO:
+  Create a POST endpoint to get questions based on a search term.
+  It should return any questions for whom the search term
+  is a substring of the question.
   """
 
     @app.route("/questions/search", methods=["POST"])
@@ -246,14 +247,14 @@ def create_app(test_config=None):
         )
 
     """
-  TEST: Search by any phrase. The questions list will update to include 
-  only question that include that string within their question. 
-  Try using the word "title" to start. 
+  TEST: Search by any phrase. The questions list will update to include
+  only question that include that string within their question.
+  Try using the word "title" to start.
   """
 
     """
-  @TODO: 
-  Create a GET endpoint to get questions based on category. 
+  @TODO:
+  Create a GET endpoint to get questions based on category.
   """
 
     @app.route("/categories/<int:category_id>/questions")
@@ -280,17 +281,17 @@ def create_app(test_config=None):
         )
 
     """
-  TEST: In the "List" tab / main screen, clicking on one of the 
-  categories in the left column will cause only questions of that 
-  category to be shown. 
+  TEST: In the "List" tab / main screen, clicking on one of the
+  categories in the left column will cause only questions of that
+  category to be shown.
   """
 
     """
-  @TODO: 
-  Create a POST endpoint to get questions to play the quiz. 
-  This endpoint should take category and previous question parameters 
-  and return a random questions within the given category, 
-  if provided, and that is not one of the previous questions. 
+  @TODO:
+  Create a POST endpoint to get questions to play the quiz.
+  This endpoint should take category and previous question parameters
+  and return a random questions within the given category,
+  if provided, and that is not one of the previous questions.
   """
 
     @app.route("/quizzes", methods=["POST"])
@@ -317,13 +318,13 @@ def create_app(test_config=None):
     """
   TEST: In the "Play" tab, after a user selects "All" or a category,
   one question at a time is displayed, the user is allowed to answer
-  and shown whether they were correct or not. 
+  and shown whether they were correct or not.
   """
 
     """
-  @TODO: 
-  Create error handlers for all expected errors 
-  including 404 and 422. 
+  @TODO:
+  Create error handlers for all expected errors
+  including 404 and 422.
   """
 
     @app.errorhandler(404)

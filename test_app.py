@@ -4,7 +4,7 @@ import json
 from flask_sqlalchemy import SQLAlchemy
 
 from app import create_app, QUESTIONS_PER_PAGE
-from models import setup_db, Question, Category
+from models import setup_db, Question
 
 
 class TriviaTestCase(unittest.TestCase):
@@ -54,7 +54,6 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data["success"], True)
         self.assertTrue(data["categories"])
         self.assertTrue(data["total_categories"])
-        # Ensure each cathegory has the right attributes {"id": Int, "type": Str}
         self.assertTrue(data["categories"])
         self.assertTrue(int(data["categories"].popitem()[0]))
         self.assertEqual(type(data["categories"].popitem()[1]), str)
@@ -72,7 +71,8 @@ class TriviaTestCase(unittest.TestCase):
 
     def test_404_GET_questions(self):
         """Test for a page that dont exist"""
-        res = self.client().get("/questions?page=9999", headers=self.admin_headers)
+        res = self.client().get("/questions?page=9999",
+                                headers=self.admin_headers)
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 404)
         self.assertEqual(data["success"], False)
@@ -83,7 +83,6 @@ class TriviaTestCase(unittest.TestCase):
     def test_Pagination(self):
         res = self.client().get("/questions", headers=self.admin_headers)
         data = json.loads(res.data)
-        # print(type(data['total_questions']), type(int(data['total_questions']/QUESTIONS_PER_PAGE)))
         for page in range(int(data["total_questions"] / QUESTIONS_PER_PAGE)):
             """page starts at 0, thus adding 1"""
             res = self.client().get(
@@ -110,11 +109,13 @@ class TriviaTestCase(unittest.TestCase):
         res = self.client().get("/questions", headers=self.admin_headers)
         data = json.loads(res.data)
         """Ensure our test question was deleted"""
-        self.assertEqual(data["total_questions"], (questions_before_delete - 1))
+        self.assertEqual(data["total_questions"],
+                         (questions_before_delete - 1))
 
     def test_404_DELETE_question(self):
         """Try to delete an inexistent question ID"""
-        res = self.client().delete("/questions/99999", headers=self.admin_headers)
+        res = self.client().delete("/questions/99999",
+                                   headers=self.admin_headers)
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 404)
         self.assertEqual(data["success"], False)
@@ -168,7 +169,9 @@ class TriviaTestCase(unittest.TestCase):
         """Test for wrong search query"""
         search = {"some_query_string": "a"}
         res = self.client().post(
-            "/questions/search", json=search, headers=self.admin_headers
+            "/questions/search",
+            json=search,
+            headers=self.admin_headers
         )
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 422)
@@ -176,7 +179,8 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data["message"], "Unprocessable Entity")
 
     def test_GET_questions_by_category(self):
-        res = self.client().get("/categories/1/questions", headers=self.admin_headers)
+        res = self.client().get("/categories/1/questions",
+                                headers=self.admin_headers)
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data["success"], True)
@@ -254,7 +258,6 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data["success"], True)
         self.assertTrue(data["categories"])
         self.assertTrue(data["total_categories"])
-        # Ensure each cathegory has the right attributes {"id": Int, "type": Str}
         self.assertTrue(data["categories"])
         self.assertTrue(int(data["categories"].popitem()[0]))
         self.assertEqual(type(data["categories"].popitem()[1]), str)

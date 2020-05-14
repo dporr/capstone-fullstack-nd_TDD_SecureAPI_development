@@ -1,5 +1,7 @@
-import json, os
-from flask import request, _request_ctx_stack, abort
+import json
+import os
+from flask import (request,
+                   abort)
 from functools import wraps
 from jose import jwt
 from urllib.request import urlopen
@@ -8,7 +10,6 @@ AUTH0_DOMAIN = os.getenv("AUTH0_DOMAIN")
 ALGORITHMS = os.getenv("ALGORITHMS")
 API_AUDIENCE = os.getenv("API_AUDIENCE")
 
-## AuthError Exception
 """
 AuthError Exception
 A standardized way to communicate auth failure modes
@@ -20,8 +21,6 @@ class AuthError(Exception):
         self.error = error
         self.status_code = status_code
 
-
-## Auth Header
 
 """
 @TODO implement get_token_auth_header() method
@@ -79,8 +78,9 @@ def get_token_auth_header():
         payload: decoded jwt payload
 
     it should raise an AuthError if permissions are not included in the payload
-        !!NOTE check your RBAC settings in Auth0
-    it should raise an AuthError if the requested permission string is not in the payload permissions array
+    !!NOTE check your RBAC settings in Auth0
+    it should raise an AuthError if the requested permission string is not
+    in the payload permissions array
     return true otherwise
 """
 
@@ -110,7 +110,8 @@ def check_permissions(permission, payload):
     it should validate the claims
     return the decoded payload
 
-    !!NOTE urlopen has a common certificate error described here: https://stackoverflow.com/questions/50236117/scraping-ssl-certificate-verify-failed-error-for-http-en-wikipedia-org
+    !!NOTE urlopen has a common certificate error described here:
+     https://stackoverflow.com/questions/50236117/scraping-ssl-certificate-verify-failed-error-for-http-en-wikipedia-org
 """
 
 
@@ -119,7 +120,7 @@ def verify_decode_jwt(token):
     jwks = json.loads(jsonurl.read())
     try:
         unverified_header = jwt.get_unverified_header(token)
-    except:
+    except Exception:
         raise AuthError(
             {
                 "code": "invalid_header",
@@ -195,8 +196,10 @@ def verify_decode_jwt(token):
 
     it should use the get_token_auth_header method to get the token
     it should use the verify_decode_jwt method to decode the jwt
-    it should use the check_permissions method validate claims and check the requested permission
-    return the decorator which passes the decoded payload to the decorated method
+    it should use the check_permissions method validate claims
+    and check the requested permission
+    return the decorator which passes the decoded payload
+    to the decorated method
 """
 
 
