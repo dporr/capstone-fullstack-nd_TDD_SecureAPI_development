@@ -41,7 +41,7 @@ def create_app(test_config=None):
         f'{CLIENT_ID}&redirect_uri=' \
         f'{AUTH0_CALLBACK_URL}'
     return jsonify({
-        "message":"Please login in the following URL in order to get JWT Tokens for each user and role"
+        "message":"Please login in the following URL in order to get JWT Tokens for each user and role",
         'url': url,
         "users":[
           {"email":"player.fsnd@dporras.io.gt", "password":"dporras-fullstack-nd01","role":"quizz player"},
