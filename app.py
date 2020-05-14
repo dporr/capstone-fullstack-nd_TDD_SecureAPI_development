@@ -34,7 +34,7 @@ def create_app(test_config=None):
     AUTH0_DOMAIN = os.getenv('AUTH0_DOMAIN')
     API_AUDIENCE = os.getenv('API_AUDIENCE')
     CLIENT_ID = os.getenv('CLIENT_ID')
-    AUTH0_CALLBACK_URL = os.getenv('CALLBACK_URL')
+    AUTH0_CALLBACK_URL   = os.getenv('CALLBACK_URL')
     url = f'https://{AUTH0_DOMAIN}/authorize' \
         f'?audience={API_AUDIENCE}' \
         f'&response_type=token&client_id=' \
@@ -279,7 +279,7 @@ def create_app(test_config=None):
       "error": 404,
       "message": "Not found"
       }), 404
-
+      
   @app.errorhandler(422)
   def unprocessable(error):
     return jsonify({
