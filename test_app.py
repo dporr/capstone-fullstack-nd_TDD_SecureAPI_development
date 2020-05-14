@@ -3,7 +3,7 @@ import unittest
 import json
 from flask_sqlalchemy import SQLAlchemy
 
-from flaskr import create_app, QUESTIONS_PER_PAGE
+from app import create_app, QUESTIONS_PER_PAGE
 from models import setup_db, Question, Category
 
 
@@ -14,13 +14,19 @@ class TriviaTestCase(unittest.TestCase):
         """Define test variables and initialize app."""
         self.app = create_app()
         self.client = self.app.test_client
-        self.ADMIN_TOKEN = os.getenv('ADMIN_TOKEN')
-        self.QA_TOKEN = os.getenv('QA_TOKEN')
-        self.PLAYER_TOKEN = os.getenv('PLAYER_TOKEN')
+        ADMIN_TOKEN = os.getenv('ADMIN_TOKEN')
+        QA_TOKEN = os.getenv('QA_TOKEN')
+        PLAYER_TOKEN = os.getenv('PLAYER_TOKEN')
         database_path = os.getenv('DATABASE_URL')
         self.database_path = database_path
         setup_db(self.app, self.database_path)
-
+        #Set headers for the different roles testing
+        self.qa_headers = { 'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + QA_TOKEN}
+        self.player_headers =  { 'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + PLAYER_TOKEN}
+        self.admin_headers =  { 'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + ADMIN_TOKEN}
         # binds the app to the current context
         with self.app.app_context():
             self.db = SQLAlchemy()
@@ -29,15 +35,14 @@ class TriviaTestCase(unittest.TestCase):
             self.db.create_all()
     
     def tearDown(self):
-        """Executed after reach test"""
         pass
 
     """
-    TODO
-    Write at least one test for each test for successful operation and for expected errors.
+    Test all endpoints using the admin token
     """
     def test_GET_categories(self):
-        res = self.client().get('/categories')
+        res = self.client().get('/categories',
+        headers=self.admin_headers)
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
@@ -49,7 +54,8 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(type(data['categories'].popitem()[1]), str)
 
     def test_GET_questions(self):
-        res = self.client().get('/questions')
+        res = self.client().get('/questions',
+        headers=self.admin_headers)
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
@@ -61,7 +67,8 @@ class TriviaTestCase(unittest.TestCase):
 
     def test_404_GET_questions(self):
         '''Test for a page that dont exist'''
-        res = self.client().get('/questions?page=9999')
+        res = self.client().get('/questions?page=9999',
+        headers=self.admin_headers)
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 404)
         self.assertEqual(data["success"], False)
@@ -69,12 +76,14 @@ class TriviaTestCase(unittest.TestCase):
 
     '''Assume get_questuions passed. Test pagination capabilities'''
     def test_Pagination(self):
-        res = self.client().get('/questions')
+        res = self.client().get('/questions',
+        headers=self.admin_headers)
         data = json.loads(res.data)
         #print(type(data['total_questions']), type(int(data['total_questions']/QUESTIONS_PER_PAGE)))
         for page in range(int(data['total_questions']/QUESTIONS_PER_PAGE)):
             '''page starts at 0, thus adding 1'''
-            res = self.client().get(f'/questions?page={page + 1}')
+            res = self.client().get(f'/questions?page={page + 1}',
+            headers=self.admin_headers)
             self.assertEqual(res.status_code, 200)
             self.assertEqual(data['success'], True)
 
@@ -83,22 +92,26 @@ class TriviaTestCase(unittest.TestCase):
         test_question = Question("question", "answer", 1, 5)
         test_question.insert()
         test_question_id = test_question.id
-        res = self.client().get('/questions')
+        res = self.client().get('/questions',
+            headers=self.admin_headers)
         data = json.loads(res.data)
         # '''Get questions + our test question'''
         questions_before_delete = data["total_questions"]
-        res = self.client().delete(f'/questions/{test_question_id}')
+        res = self.client().delete(f'/questions/{test_question_id}',
+            headers=self.admin_headers)
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
-        res = self.client().get('/questions')
+        res = self.client().get('/questions',
+            headers=self.admin_headers)
         data = json.loads(res.data)
         '''Ensure our test question was deleted'''
         self.assertEqual(data["total_questions"], (questions_before_delete - 1))
     
     def test_404_DELETE_question(self):
         '''Try to delete an inexistent question ID''' 
-        res = self.client().delete('/questions/99999')
+        res = self.client().delete('/questions/99999',
+            headers=self.admin_headers)
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 404)
         self.assertEqual(data["success"], False)
@@ -109,7 +122,8 @@ class TriviaTestCase(unittest.TestCase):
         "answer": "this.state.answer",
         "difficulty": 4,
         "category": 1}
-        res = self.client().post('/questions', json=test_question)
+        res = self.client().post('/questions', json=test_question,
+            headers=self.admin_headers)
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
@@ -122,7 +136,8 @@ class TriviaTestCase(unittest.TestCase):
         "Answer": "this.state.answer",
         "some_data": 4,
         "w00tw00t": 1}
-        res = self.client().post('/questions', json=test_question)
+        res = self.client().post('/questions', json=test_question,
+            headers=self.admin_headers)
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 422)
         self.assertEqual(data['success'], False)
@@ -131,7 +146,8 @@ class TriviaTestCase(unittest.TestCase):
     
     def test_POST_search(self):
         search = {"searchTerm": "a"}
-        res = self.client().post('/questions/search', json=search)
+        res = self.client().post('/questions/search', json=search,
+            headers=self.admin_headers)
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
@@ -142,14 +158,16 @@ class TriviaTestCase(unittest.TestCase):
     def test_422_POST_search(self):
         '''Test for wrong search query'''
         search = {"some_query_string": "a"}
-        res = self.client().post('/questions/search', json=search)
+        res = self.client().post('/questions/search', json=search,
+            headers=self.admin_headers)
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 422)
         self.assertEqual(data['success'], False)
         self.assertEqual(data["message"], "Unprocessable Entity")
 
     def test_GET_questions_by_category(self):
-        res = self.client().get('/categories/1/questions')
+        res = self.client().get('/categories/1/questions',
+            headers=self.admin_headers)
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
@@ -159,12 +177,14 @@ class TriviaTestCase(unittest.TestCase):
         self.assertTrue(data['current_category'])
 
     def test_404_GET_questions_by_category(self):
-        res = self.client().get('/categories/999999/questions')
+        res = self.client().get('/categories/999999/questions',
+            headers=self.admin_headers)
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 404)
         self.assertEqual(data["success"], False)
         self.assertEqual(data["message"], "Not found")
 
+    '''RBAC tests'''
 #TODO add a test for quizes
 # Make the tests conveniently executable
 if __name__ == "__main__":
