@@ -310,3 +310,23 @@ To run the tests, run
 ```
 python test_app.py
 ```
+
+# Avaible Roles
+There are 3 roles  and 6 different permissions definen in the Authorization backend for this application
+## Permissions:
+    ```
+    'get:questions': Retrieve a raw list of all questions and allows to use the search endpoint
+    'get:categories': List the existent categories
+    'get:quizzes': Allows to play a quizzes
+    'create:questions': Create new questions under certain category
+    'delete:questions': Delete a question
+    'update:questions': Update partially or totally the attirbutes of a question.
+    ```
+
+## Roles
+### Player
+Can list categories and chose a category for playing. Is the only profile that ca play quizzes.
+### QA
+Can list and search all questions for reviewing purposes
+### Admin
+Is the profile in charge of creating, deleting and updating the questions
