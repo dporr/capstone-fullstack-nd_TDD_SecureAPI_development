@@ -69,7 +69,10 @@ def check_permissions(permission, payload):
     if "permissions" not in payload:
         abort(400)
     if permission not in payload['permissions']:
-        abort(403)
+        raise AuthError({
+            'code': 'Unauthorized',
+            'description': "You don't have permission on the requested resource"
+        }, 403)
     return True
 
 '''
