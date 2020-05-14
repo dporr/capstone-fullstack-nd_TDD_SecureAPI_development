@@ -169,7 +169,10 @@ def create_app(test_config=None):
         if not (question and answer and category and difficulty):
             abort(422)
         new_question = Question(
-            question=question, answer=answer, category=category, difficulty=difficulty
+            question=question,
+            answer=answer,
+            category=category,
+            difficulty=difficulty,
         )
         new_question.insert()
         question_id = new_question.id
@@ -192,7 +195,9 @@ def create_app(test_config=None):
         difficulty = payload.get("difficulty", "")
         if not payload:
             abort(422)
-        edit_question = Question.query.filter(Question.id == question_id).first()
+        edit_question = Question.query.filter(
+            Question.id == question_id
+        ).first()
         if not edit_question:
             abort(404)
         if question:
@@ -297,7 +302,9 @@ def create_app(test_config=None):
         if category:
             questions = get_questions_by_category(category, paginate=False)
         else:
-            questions = [question.format() for question in Question.query.all()]
+            questions = [
+                question.format() for question in Question.query.all()
+            ]
         if previous_questions:
             questions = [
                 question
@@ -321,13 +328,20 @@ def create_app(test_config=None):
 
     @app.errorhandler(404)
     def not_found(error):
-        return jsonify({"success": False, "error": 404, "message": "Not found"}), 404
+        return (
+            jsonify({"success": False, "error": 404, "message": "Not found"}),
+            404,
+        )
 
     @app.errorhandler(422)
     def unprocessable(error):
         return (
             jsonify(
-                {"success": False, "error": 422, "message": "Unprocessable Entity"}
+                {
+                    "success": False,
+                    "error": 422,
+                    "message": "Unprocessable Entity",
+                }
             ),
             422,
         )
@@ -335,14 +349,26 @@ def create_app(test_config=None):
     @app.errorhandler(405)
     def method_not_allowed(error):
         return (
-            jsonify({"success": False, "error": 405, "message": "Method not allowed"}),
+            jsonify(
+                {
+                    "success": False,
+                    "error": 405,
+                    "message": "Method not allowed",
+                }
+            ),
             405,
         )
 
     @app.errorhandler(400)
     def bad_request(error):
         return (
-            jsonify({"success": False, "error": 400, "message": "Bad Request error"}),
+            jsonify(
+                {
+                    "success": False,
+                    "error": 400,
+                    "message": "Bad Request error",
+                }
+            ),
             400,
         )
 
@@ -350,7 +376,11 @@ def create_app(test_config=None):
     def internal_server_error(error):
         return (
             jsonify(
-                {"success": False, "error": 500, "message": "Internal server error"}
+                {
+                    "success": False,
+                    "error": 500,
+                    "message": "Internal server error",
+                }
             ),
             500,
         )
