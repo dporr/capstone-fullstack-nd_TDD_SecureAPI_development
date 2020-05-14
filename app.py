@@ -34,7 +34,7 @@ def create_app(test_config=None):
     AUTH0_DOMAIN = os.getenv('AUTH0_DOMAIN')
     API_AUDIENCE = os.getenv('API_AUDIENCE')
     CLIENT_ID = os.getenv('CLIENT_ID')
-    AUTH0_CALLBACK_URL = "https://fullstack-capstone-dporr.herokuapp.com/"
+    AUTH0_CALLBACK_URL = "https://fullstack-capstone-dporr.herokuapp.com/login-esult"
     url = f'https://{AUTH0_DOMAIN}/authorize' \
         f'?audience={API_AUDIENCE}' \
         f'&response_type=token&client_id=' \
