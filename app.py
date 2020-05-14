@@ -260,6 +260,15 @@ def create_app(test_config=None):
       "error": 500,
       "message": "Internal server error"
     }), 500
+  @app.errorhandler(AuthError)
+  def autherror(error):
+    error_details = error.error
+    error_status_code = error.status_code
+    return jsonify({
+        'success': False,
+        'error': error_status_code,
+        'message': error_details['description']
+    }), error_status_code  
   return app
 
 app = create_app()
