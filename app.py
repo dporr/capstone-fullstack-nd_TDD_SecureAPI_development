@@ -127,6 +127,39 @@ def create_app(test_config=None):
       "question_id": question_id
     })
 
+ '''
+  @TODO: 
+  Create an endpoint to PATCH an existing question, 
+  which will require the question ID and allows to edit 
+  category, question, answer and difficulty score.
+  '''
+  @app.route('/questions/<int:question_id>', methods=['PATCH'])
+  @requires_auth('update:questions')
+  def create_question(jwt, question_id):
+    payload = request.get_json()
+    question = payload.get('question', '')
+    answer = payload.get('answer','')
+    category =  payload.get('category', '')
+    difficulty = payload.get('difficulty', '')
+    if not payload:
+      abort(422)
+    edit_question = Question.query.filter(Question.id==question_id).first()
+    if not edit_question:
+      abort(404)
+    if question:
+      edit_question.question = question
+    if answer:
+      edit_question.answer = answer
+    if category:
+      edit_question.category = category
+    if difficulty:
+      edit_question.difficulty = difficulty
+    edit_question.update()
+    question_id = edit_question.id
+    return jsonify({
+      "success": True,
+      "question_id": question_id
+    })
   '''
   TEST: When you submit a question on the "Add" tab, 
   the form will clear and the question will appear at the end of the last page
