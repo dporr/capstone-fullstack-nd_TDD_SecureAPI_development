@@ -183,6 +183,26 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 404)
         self.assertEqual(data["success"], False)
         self.assertEqual(data["message"], "Not found")
+    
+    def test_PATCH_question(self):
+        test_question = {"question" : "This question was updated",
+        "answer": "This is a complete new answer",
+        "difficulty": 1,
+        "category": 1}
+        res = self.client().patch('/questions/9', json=test_question,
+            headers=self.admin_headers)
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertTrue(data['question_id'])
+
+    def test_422_PATCH_question(self):
+        test_question = {}
+        res = self.client().patch('/questions/9', json=test_question,
+            headers=self.admin_headers)
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 422)
+        self.assertEqual(data['success'], False)
 
     '''RBAC tests'''
 #TODO add a test for quizes
