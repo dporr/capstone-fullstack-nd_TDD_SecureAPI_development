@@ -1,12 +1,12 @@
 # Full Stack Nano Degree - Capstone - TDD Secure API Development
 
 ## Motivation
-Create a functional API with the following requierements
+Create a functional API with the following requirements
 * Maintainable: PEP8 compliant code
 * Secure: custom RBAC via Auth0
-* Testable: Test driven development in place for all behaviors, endpoints and access control features
-* Documented: All endpoints and roles are docummented
-* Production ready: Final code is tested and deployed to Heroku
+* Testable: Test-driven development in place for all behaviors, endpoints and access control features
+* Documented: All endpoints and roles are documented
+* Production-ready: Final code is tested and deployed to Heroku
 
 ## Full Stack Trivia Description
 
@@ -311,21 +311,21 @@ To run the tests, run
 python test_app.py
 ```
 
-# Avaible Roles
-There are 3 roles  and 6 different permissions definen in the Authorization backend for this application
+# Available Roles
+There are 3 roles  and 6 different permissions defined in the Authorization backend for this application
 ## Permissions:
     ```
     'get:questions': Retrieve a raw list of all questions and allows to use the search endpoint
     'get:categories': List the existent categories
     'get:quizzes': Allows to play a quizzes
-    'create:questions': Create new questions under certain category
+    'create:questions': Create new questions under a certain category
     'delete:questions': Delete a question
-    'update:questions': Update partially or totally the attirbutes of a question.
+    'update:questions': Update partially or totally the attributes of a question.
     ```
 
 ## Roles
 ### Player
-Can list categories and chose a category for playing. Is the only profile that ca play quizzes.
+Can list categories and chose a category for playing. It is the only profile that ca play quizzes.
 ### QA
 Can list and search all questions for reviewing purposes
 ### Admin
