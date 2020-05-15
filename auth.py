@@ -47,7 +47,8 @@ def get_token_auth_header():
         raise AuthError(
             {
                 "code": "invalid_header",
-                "description": 'Authorization header must start with "Bearer".',
+                "description": 'Authorization header must \
+                                start with "Bearer".',
             },
             401,
         )
@@ -92,7 +93,8 @@ def check_permissions(permission, payload):
         raise AuthError(
             {
                 "code": "Unauthorized",
-                "description": "You don't have permission on the requested resource",
+                "description": "You don't have permission on \
+                                the requested resource",
             },
             403,
         )
@@ -168,7 +170,8 @@ def verify_decode_jwt(token):
             raise AuthError(
                 {
                     "code": "invalid_claims",
-                    "description": "Incorrect claims. Please, check the audience and issuer.",
+                    "description": "Incorrect claims. \
+                                    Please, check the audience and issuer.",
                 },
                 401,
             )

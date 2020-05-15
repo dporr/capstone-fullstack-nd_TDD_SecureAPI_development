@@ -129,7 +129,8 @@ def create_app(test_config=None):
 
     """TEST: At this point, when you start the application
   you should see questions and categories generated,
-  ten questions per page and pagination at the bottom of the screen for three pages.
+  ten questions per page and pagination at the bottom of the
+  screen for three pages.
   Clicking on the page numbers should update the questions.
   """
 
@@ -147,10 +148,10 @@ def create_app(test_config=None):
         question.delete()
         return jsonify({"success": True, "deleted_id": question_id})
 
+    """ TEST: When you click the trash icon next to a question,
+    the question will be removed.
+    This removal will persist in the database and when you refresh the page.
     """
-  TEST: When you click the trash icon next to a question, the question will be removed.
-  This removal will persist in the database and when you refresh the page.
-  """
 
     """
   @TODO:
